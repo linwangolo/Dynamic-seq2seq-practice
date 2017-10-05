@@ -13,7 +13,7 @@ class preprocessing():
         self.decoderFile = './answer.txt'
         self.dictFile = 'word_dict.txt'
         jieba.load_userdict(self.dictFile)
-        self.stopwordsFile = "./preprocessing/stopwords.dat"
+        self.stopwordsFile = "./preprocessing/stopwords.dat"     //
         
     def wordToVocabulary(self, originFile, vocabFile, segementFile):
         # stopwords = [i.strip() for i in open(self.stopwordsFile).readlines()]
