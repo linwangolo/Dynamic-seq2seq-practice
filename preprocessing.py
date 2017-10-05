@@ -41,7 +41,7 @@ class preprocessing():
         vocab_file = open(vocabFile, "w")
         _vocabulary = list(set(vocabulary))
         _vocabulary.sort(key=vocabulary.index)
-        _vocabulary = self.vocab + _vocabulary     # self.vocab define?
+        _vocabulary = self.vocab + _vocabulary     # add words to self.vocab
         for index, word in enumerate(_vocabulary):
             vocab_file.write(word+"\n")
         vocab_file.close()
