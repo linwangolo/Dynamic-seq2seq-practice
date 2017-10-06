@@ -72,11 +72,11 @@ class seq2seq():
         _ids = []
         with open(file, "r") as fw:
             line = fw.readline()
-            while line:
+            while line:                         # where's the breakpoint?
                 sequence = [int(i) for i in line.split()]
                 _ids.append(sequence)
-                line = fw.readline()
-        return _ids        
+                line = fw.readline()            # why python know to append to next vector
+        return _ids                             # output: [[4,5,1,...],[1,2,4,...],[8,1,...],...] 
 
     def get_fd(self, train_inputs,train_targets, batches, sample_num):
         '''获取batch
@@ -125,22 +125,22 @@ class seq2seq():
 
     def train(self):
         # 获取输入输出
-        train_inputs = self.data_set(self.encoder_vec_file)
-        train_targets = self.data_set(self.decoder_vec_file) 
+        train_inputs = self.data_set(self.encoder_vec_file)   # to be a list
+        train_targets = self.data_set(self.decoder_vec_file)   
         
         f = open(self.encoder_vec_file)
-        self.sample_num = len(f.readlines())
+        self.sample_num = len(f.readlines())        #f=open('test_vec.txt','r') ; len(f.readlines()); # 0 ?
         f.close()
         print("共有 %s 条样本" % self.sample_num)
 
-
+        # GPU settings
         config = tf.ConfigProto()
         config.gpu_options.allow_growth = True
 
         with tf.Session(config=config) as sess:
             
             # 初始化变量
-            ckpt = tf.train.get_checkpoint_state(self.model_path)
+            ckpt = tf.train.get_checkpoint_state(self.model_path)       # ???
             if ckpt is not None:
                 print(ckpt.model_checkpoint_path)
                 self.model.saver.restore(sess, ckpt.model_checkpoint_path)
