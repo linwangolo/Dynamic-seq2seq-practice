@@ -44,7 +44,7 @@ class dynamicSeq2seq():
         self.debug = debug
         self.bidirectional = bidirectional
         self.attention = attention
-ㄏ
+
         self.encoder_vocab_size = encoder_vocab_size
         self.decoder_vocab_size = decoder_vocab_size
         
