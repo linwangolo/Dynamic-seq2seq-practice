@@ -260,20 +260,20 @@ class seq2seq():
     def segement(self, strs):
         return jieba.lcut(strs)
 
-    def make_inference_fd(self, inputs_seq):
-        sequence_lengths = [len(seq) for seq in inputs_seq]
+    def make_inference_fd(self, inputs_seq):                     
+        sequence_lengths = [len(seq) for seq in inputs_seq]      ### why give a chance to input multiple sentences while predicting(chatting)?
         max_seq_length = max(sequence_lengths)
         batch_size = len(inputs_seq)
         
         inputs_time_major = []
-        # PAD
+        # PAD : let all inputs as same length (shorter one filled with zero)
         for sents in inputs_seq:
             inputs_batch_major = np.zeros(shape=[max_seq_length], dtype=np.int32) # == PAD
             for index in range(len(sents)):
                 inputs_batch_major[index] = sents[index]
             inputs_time_major.append(inputs_batch_major)
 
-        inputs_time_major = np.array(inputs_time_major).swapaxes(0, 1)
+        inputs_time_major = np.array(inputs_time_major).swapaxes(0, 1)    ### why swap(same position in the senctence being in same vector)
         return {self.model.encoder_inputs:inputs_time_major, 
                 self.model.encoder_inputs_length:sequence_lengths}
     
@@ -296,25 +296,25 @@ class seq2seq():
                 inputs_strs = re.sub("[\s+\.\!\/_,$%^*(+\"\']+|[+——！，。“”’‘？?、~@#￥%……&*（）]+", "", inputs_strs)
 
                 action = False
-                segements = self.segement(inputs_strs)
+                segements = self.segement(inputs_strs)                       # cut string by jieba
                 #inputs_vec = [enc_vocab.get(i) for i in segements]
                 inputs_vec = []
                 for i in segements:
-                    if i in self.location:
+                    if i in self.location:                                   # examine whether there is a location in the location variable 
                         tag_location = i
-                        Action.tag_location = i
-                        inputs_vec.append(self.enc_vocab.get("__location__", self.model.UNK))
-                        continue
+                        Action.tag_location = i                                             ### Action.??????
+                        inputs_vec.append(self.enc_vocab.get("__location__", self.model.UNK))   ### why get UNK? wht can get 2 obj. once?
+                        continue                                                                # if there is then go to next word
                     inputs_vec.append(self.enc_vocab.get(i, self.model.UNK))
-                fd = self.make_inference_fd([inputs_vec])
+                fd = self.make_inference_fd([inputs_vec])                                       # put [] into function so it can seen as a list to count len()
                 inf_out = sess.run(self.model.decoder_prediction_inference, fd)
-                inf_out = [i[0] for i in inf_out]
+                inf_out = [i[0] for i in inf_out]                                       ### ??
 
                 outstrs = ''
                 for vec in inf_out:
                     if vec == self.model.EOS:
                         break
-                    outstrs += self.dec_vecToSeg.get(vec, self.model.UNK)
+                    outstrs += self.dec_vecToSeg.get(vec, self.model.UNK)               #### index -> word, UNKKKKK  ???
                 print(outstrs)
                 
 
