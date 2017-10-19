@@ -129,7 +129,7 @@ class seq2seq():
         train_targets = self.data_set(self.decoder_vec_file)   
         
         f = open(self.encoder_vec_file)
-        self.sample_num = len(f.readlines())        #f=open('test_vec.txt','r') ; len(f.readlines()); # 0 ?
+        self.sample_num = len(f.readlines())        # f=open('test_vec.txt','r') ; len(f.readlines()); # 0 ?
         f.close()
         print("共有 %s 条样本" % self.sample_num)
 
@@ -139,11 +139,12 @@ class seq2seq():
 
         with tf.Session(config=config) as sess:
             
-            # 初始化变量
-            ckpt = tf.train.get_checkpoint_state(self.model_path)       # ???
+            # 初始化变量 
+            # 檢查.ckpt檔內有無已存取的變數資料,若有則拿來更新環境中的變數,若無則初始化
+            ckpt = tf.train.get_checkpoint_state(self.model_path)       # checkpoint(.ckpt->binary)是存變數名稱及其張量數值的檔
             if ckpt is not None:
                 print(ckpt.model_checkpoint_path)
-                self.model.saver.restore(sess, ckpt.model_checkpoint_path)
+                self.model.saver.restore(sess, ckpt.model_checkpoint_path)    # why model can call saver not tf.train.saver
             else:
                 sess.run(tf.global_variables_initializer())
 
@@ -156,7 +157,7 @@ class seq2seq():
                                  train_targets,
                                  self.batch_size,
                                  self.sample_num)
-                _, loss,_,_ = sess.run([self.model.train_op, 
+                _, loss,_,_ = sess.run([self.model.train_op,     # where's the function
                                         self.model.loss,
                                         self.model.gradient_norms,
                                         self.model.updates], fd)
@@ -178,9 +179,9 @@ class seq2seq():
                     # 清理模型
                     self.clearModel()
                     total_time = 0
-                    for i, (e_in, dt_pred) in enumerate(zip(
+                    for i, (e_in, dt_pred) in enumerate(zip(                      # clear ????
                         fd[self.model.decoder_targets].T,
-                        sess.run(self.model.decoder_prediction_train, fd).T
+                        sess.run(self.model.decoder_prediction_train, fd).T                
                     )):
                         print('  sample {}:'.format(i + 1))
                         print('    dec targets > {}'.format(e_in))
