@@ -44,7 +44,7 @@ class dynamicSeq2seq():
         self.debug = debug
         self.bidirectional = bidirectional
         self.attention = attention
-
+ㄏ
         self.encoder_vocab_size = encoder_vocab_size
         self.decoder_vocab_size = decoder_vocab_size
         
@@ -63,7 +63,7 @@ class dynamicSeq2seq():
     @property
     def decoder_hidden_units(self):
         # @TODO: is this correct for LSTMStateTuple?
-        return self.decoder_cell.output_size
+        return self.decoder_cell.output_size    
     
     def _make_graph(self):
         # 创建占位符
@@ -115,11 +115,11 @@ class dynamicSeq2seq():
         with tf.name_scope('DecoderTrainFeeds'):
             sequence_size, batch_size = tf.unstack(tf.shape(self.decoder_targets))
             #batch_size, sequence_size = tf.unstack(tf.shape(self.decoder_targets))
-
+ 
 
             EOS_SLICE = tf.ones([1, batch_size], dtype=tf.int32) * self.EOS
             PAD_SLICE = tf.ones([1, batch_size], dtype=tf.int32) * self.PAD
-
+  
             self.decoder_train_inputs = tf.concat([EOS_SLICE, self.decoder_targets], axis=0)
             self.decoder_train_length = self.decoder_targets_length + 1
             #self.decoder_train_length = self.decoder_targets_length
@@ -307,7 +307,7 @@ class dynamicSeq2seq():
         self.targets = tf.transpose(self.decoder_train_targets, [1, 0])
     
         self.loss = seq2seq.sequence_loss(logits=logits, targets=targets,
-                                          weights=self.loss_weights)
+                                          weights=self.loss_weights)         # where's this function???
         
         opt = tf.train.AdamOptimizer()
         self.train_op = opt.minimize(self.loss)
