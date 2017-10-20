@@ -113,14 +113,14 @@ class dynamicSeq2seq():
 
     def _init_decoder_train_connectors(self):
         with tf.name_scope('DecoderTrainFeeds'):
-            sequence_size, batch_size = tf.unstack(tf.shape(self.decoder_targets))
+            sequence_size, batch_size = tf.unstack(tf.shape(self.decoder_targets))          # unstack the vector to get value respectively
             #batch_size, sequence_size = tf.unstack(tf.shape(self.decoder_targets))
  
 
-            EOS_SLICE = tf.ones([1, batch_size], dtype=tf.int32) * self.EOS
-            PAD_SLICE = tf.ones([1, batch_size], dtype=tf.int32) * self.PAD
-  
-            self.decoder_train_inputs = tf.concat([EOS_SLICE, self.decoder_targets], axis=0)
+            EOS_SLICE = tf.ones([1, batch_size], dtype=tf.int32) * self.EOS                  ### ??
+            PAD_SLICE = tf.ones([1, batch_size], dtype=tf.int32) * self.PAD                  ### ??
+                                                                                            ### Why add a vector of 3 with shape=1*batch_size
+            self.decoder_train_inputs = tf.concat([EOS_SLICE, self.decoder_targets], axis=0)   # concat: merge 2 matrix by axis=0(first axis)
             self.decoder_train_length = self.decoder_targets_length + 1
             #self.decoder_train_length = self.decoder_targets_length
 
