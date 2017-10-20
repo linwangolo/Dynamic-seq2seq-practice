@@ -119,7 +119,8 @@ class dynamicSeq2seq():
 
             EOS_SLICE = tf.ones([1, batch_size], dtype=tf.int32) * self.EOS                  ### ??
             PAD_SLICE = tf.ones([1, batch_size], dtype=tf.int32) * self.PAD                  ### ??
-                                                                                            ### Why add a vector of 3 with shape=1*batch_size
+            
+                                                                                             ### Why add a vector of 3 with shape=1*batch_size
             self.decoder_train_inputs = tf.concat([EOS_SLICE, self.decoder_targets], axis=0)   # concat: merge 2 matrix by axis=0(first axis)
             self.decoder_train_length = self.decoder_targets_length + 1
             #self.decoder_train_length = self.decoder_targets_length
